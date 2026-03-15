@@ -2,7 +2,7 @@ import pygame
 
 import sys
 
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT, SHOT_SCORE
+from constants import *
 from logger import log_state, log_event
 from player import Player
 from asteroid import Asteroid
@@ -10,8 +10,8 @@ from asteroidfield import AsteroidField
 from shot import Shot
 from handle_text import TextHandle
 
-def main():
 
+def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     font = pygame.font.Font(None, 36)
@@ -47,15 +47,20 @@ def main():
             i.draw(screen)
         
         handle_text.display_text(f"Score: {player.score}", "topleft")
+        handle_text.display_text(f"Lives: {player.lives}", "topright")
 
         pygame.display.flip()
         dt = clock.tick(60) / 1000
         updatable.update(dt)
+
         for asteroid in asteroids:
             if asteroid.collides_with(player):
                 log_event("player_hit")
-                print("Game over!")
-                sys.exit()
+                if player.lives > 1:
+                    player = player.respawn()
+                else:
+                    print("Game over!")
+                    game_state = GAME_OVER
 
         for asteroid in asteroids:
             for shot in shots:

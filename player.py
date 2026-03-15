@@ -5,11 +5,12 @@ from constants import *
 from shot import Shot
 
 class Player(CircleShape):
-    def __init__(self, x, y):
+    def __init__(self, x, y, score = 0, lives = 3):
         super().__init__(x, y, PLAYER_RADUIS)
         self.rotation = 0
         self.shoot_cooldown = 0
-        self.score = 0
+        self.score = score
+        self.lives = lives
     
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -53,3 +54,7 @@ class Player(CircleShape):
         shot = Shot(self.position[0], self.position[1])
         shot.velocity = pygame.Vector2(0, 1).rotate(self.rotation)
         shot.velocity *= PLAYER_SHOT_SPEED
+
+    def respawn(self):
+        self.kill()
+        return Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, self.score, self.lives - 1)
