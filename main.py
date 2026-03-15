@@ -60,7 +60,7 @@ def main():
                     player = player.respawn()
                 else:
                     print("Game over!")
-                    game_state = GAME_OVER
+                    sys.exit()
 
         for asteroid in asteroids:
             for shot in shots:
